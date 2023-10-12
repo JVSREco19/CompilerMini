@@ -57,7 +57,13 @@ t_COLON = r':'
 t_SEMICOLON = r';'
 t_COMMA = r','
 t_ASSIGN = r':='
-t_IDENTIFIER = r'[a-zA-Z][a-zA-Z0-9]*'
+
+# Defina uma expressão regular para palavras-chave insensíveis a maiúsculas e minúsculas
+def t_IDENTIFIER(t):
+    r'[a-zA-Z][a-zA-Z0-9]*'
+    t.type = reserved.get(t.value, 'IDENTIFIER')
+    return t
+
 # Expressão regular para ignorar comentários de uma linha
 def t_COMMENT(t):
     r'%.*'
