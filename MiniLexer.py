@@ -1,4 +1,6 @@
 import ply.lex as lex
+import os
+from symbols_table import SymbolTable 
 
 # Lista de palavras-chave reservadas em Mini
 reserved = {
@@ -22,8 +24,6 @@ reserved = {
     'mod': 'MOD',
 }
 
-# Tabela de símbolos
-symbol_table = {}
 
 # Lista de tokens
 tokens = [
@@ -49,7 +49,7 @@ t_CONSTANT = r'\d+'
 t_LITERAL = r'".*?"'
 t_RELOP = r'<=|>=|<>|<|>|='
 t_ADDOP = r'\+|-'
-t_MULOP = r'\*|/|\band\b|\bmod\b'
+t_MULOP = r'\*|\/|\band\b|\bmod\b'
 t_SHIFTOP = r'<<|>>|<<<|>>>'
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
@@ -82,23 +82,11 @@ def t_error(t):
 # Ignora espaços em branco e tabulações
 t_ignore = ' \t'
 
-# Função para adicionar variáveis à tabela de símbolos
-def add_to_symbol_table(name, type):
-    if name in symbol_table:
-        
-        #print(f"Erro: Variável '{name}' já declarada na linha {symbol_table[name]['line']}.")
-        pass
-    else:
-        symbol_table[name] = {'type': type, 'line': lexer.lineno}
-
 
 
 # Exemplo de uso do lexer
 if __name__ == '__main__':
-    import os
-    
-    
-    
+
     arquivos = os.listdir('./Testes/')
     for arquivo in arquivos:
         caminho_arquivo = os.path.join('./Testes/', arquivo)
@@ -107,25 +95,25 @@ if __name__ == '__main__':
             conteudo = arquivo_txt.read()
             # Criação do analisador léxico
             lexer = lex.lex()
-           # Alimenta o lexer com o programa de teste
+            # Alimenta o lexer com o programa de teste
             lexer.input(conteudo)
-
+            symbolsTable = SymbolTable()
             # Tokeniza o programa e preenche a tabela de símbolos
             while True:
                 tok = lexer.token()
                 if not tok:
                     break
-                if tok.type == 'IDENTIFIER':
-                    add_to_symbol_table(tok.value, 'unknown')
+                if tok.type == "IDENTIFIER":
+                    symbolsTable.add(name = tok.value,level = 0, attribute={"type":tok.type, "line":lexer.lineno})
                 print(tok)
-            
+
             print("------------------------------------------------")
-            
+
             # Exibindo a tabela de símbolos após o término da análise
             print("\nTabela de Símbolos:")
-            for var, info in symbol_table.items():
-                print(f"Nome: {var}, Tipo: {info['type']}, Linha de Declaração: {info['line']}")
-            
-            # Tabela de símbolos
-            symbol_table = {}
+            for var, info in symbolsTable.get().items():
+                print(f"Nome: {var}", info)
+            # Limpa a tabela de símbolos após a análise deste arquivo
+            symbolsTable.clear()
+
             print("\n###############################################")
