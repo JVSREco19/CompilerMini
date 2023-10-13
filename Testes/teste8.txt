@@ -1,15 +1,17 @@
 program teste8
+
 declare
-	integer age;
+
+integer n, fatorial, i;
+
 begin
-	read(age);
-	if (age<18) then
-		write("crianca")
-	else
-		if (age >60) then
-			write("idoso")
-		else
-			write("adulto")
-		end
-	end;
+
+read(n);
+fatorial := 1;
+
+for i := 1 to n do
+    fatorial := fatorial * i;
+
+write("O fatorial de ", n, " é ", fatorial);
+
 end
