@@ -19,9 +19,10 @@ reserved = {
     'integer': 'INTEGER',
     'decimal': 'DECIMAL',
     'not': 'NOT',
-    'and': 'AND',
     'or': 'OR',
-    'mod': 'MOD',
+    'to':'TO',
+    'and':'AND',
+    'mod':'MOD'
 }
 
 
@@ -31,7 +32,8 @@ tokens = [
     'CONSTANT',
     'LITERAL',
     'RELOP',
-    'ADDOP',
+    'ADD',
+    'MINUS',
     'MULOP',
     'SHIFTOP',
     'LPAREN',
@@ -41,16 +43,18 @@ tokens = [
     'COMMA',
     'ASSIGN',
     'COMMENT',
-    'QUESTION_MARK'
+    'QUESTION_MARK',
+    
 ] + list(reserved.values())
 
 # Expressões regulares para os tokens
 
 t_CONSTANT = r'\d+'
-t_LITERAL = r'".*?"'
+t_LITERAL = r'"[^"]*"'
 t_RELOP = r'<=|>=|<>|<|>|='
-t_ADDOP = r'\+|-'
-t_MULOP = r'\*|\/|\band\b|\bmod\b'
+t_ADD = r'\+'
+t_MINUS = r'-'
+t_MULOP = r'\*|\/'
 t_SHIFTOP = r'<<|>>|<<<|>>>'
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
@@ -59,6 +63,7 @@ t_SEMICOLON = r';'
 t_COMMA = r','
 t_ASSIGN = r':='
 t_QUESTION_MARK = r'\?'
+
 # Defina uma expressão regular para palavras-chave insensíveis a maiúsculas e minúsculas
 def t_IDENTIFIER(t):
     r'[a-zA-Z][a-zA-Z0-9]*'
@@ -69,7 +74,6 @@ def t_IDENTIFIER(t):
 def t_COMMENT(t):
     r'%.*'
     pass
-
 # Expressão regular para rastrear números de linha
 def t_newline(t):
     r'\n+'
@@ -77,9 +81,11 @@ def t_newline(t):
 
 errorsList = []
 
+
+
 # Função de manipulação de erro
 def t_error(t):
-    errorsList.append("Caractere ilegal '{t.value[0]}' na linha {t.lexer.lineno}")
+    errorsList.append(f"Caractere ilegal '{t.value[0]}' na linha {t.lexer.lineno}")
     print(f"Caractere ilegal '{t.value[0]}' na linha {t.lexer.lineno}")
     t.lexer.skip(1)
 
@@ -87,27 +93,36 @@ def t_error(t):
 t_ignore = ' \t'
 
 
+def createLexer():
+    lexer = lex.lex()
+    return lexer
+
+# Exemplo de uso do lexer
+def runLexer(arquivo_txt):
+    tokList = []
+    # Processar o arquivo .txt
+    conteudo = arquivo_txt.read()
+    # Criação do analisador léxico
+    lexer = lex.lex()
+    # Alimenta o lexer com o programa de teste
+    lexer.input(conteudo)
+    # Tokeniza o programa e preenche a tabela de símbolos
+    while True:
+        tok = lexer.token()
+        if not tok:
+            break
+        tokList.append(tok)
+        
+    return tokList
+
+
+
 # Exemplo de uso do lexer
 if __name__ == '__main__':
-
     arquivos = os.listdir('./Testes/')
     for arquivo in arquivos:
         caminho_arquivo = os.path.join('./Testes/', arquivo)
         with open(caminho_arquivo, 'r', encoding='utf-8') as arquivo_txt:
-            # Processar o arquivo .txt
-            conteudo = arquivo_txt.read()
-            # Criação do analisador léxico
-            lexer = lex.lex()
-            # Alimenta o lexer com o programa de teste
-            lexer.input(conteudo)
-            symbolsTable = SymbolTable()
-            # Tokeniza o programa e preenche a tabela de símbolos
-            while True:
-                tok = lexer.token()
-                if not tok:
-                    break
-                if tok.type == "IDENTIFIER":
-                    symbolsTable.add(name = tok.value,level = 0, attribute={"type":tok.type, "line":lexer.lineno})
-                print(tok)
-
-
+            tokList = runLexer(arquivo_txt)
+            for i in tokList:
+                print (i)
