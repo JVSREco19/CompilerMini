@@ -40,7 +40,8 @@ tokens = [
     'SEMICOLON',
     'COMMA',
     'ASSIGN',
-    'COMMENT'
+    'COMMENT',
+    'QUESTION_MARK'
 ] + list(reserved.values())
 
 # Expressões regulares para os tokens
@@ -57,7 +58,7 @@ t_COLON = r':'
 t_SEMICOLON = r';'
 t_COMMA = r','
 t_ASSIGN = r':='
-
+t_QUESTION_MARK = r'\?'
 # Defina uma expressão regular para palavras-chave insensíveis a maiúsculas e minúsculas
 def t_IDENTIFIER(t):
     r'[a-zA-Z][a-zA-Z0-9]*'
@@ -74,14 +75,16 @@ def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
+errorsList = []
+
 # Função de manipulação de erro
 def t_error(t):
+    errorsList.append("Caractere ilegal '{t.value[0]}' na linha {t.lexer.lineno}")
     print(f"Caractere ilegal '{t.value[0]}' na linha {t.lexer.lineno}")
     t.lexer.skip(1)
 
 # Ignora espaços em branco e tabulações
 t_ignore = ' \t'
-
 
 
 # Exemplo de uso do lexer
@@ -107,13 +110,4 @@ if __name__ == '__main__':
                     symbolsTable.add(name = tok.value,level = 0, attribute={"type":tok.type, "line":lexer.lineno})
                 print(tok)
 
-            print("------------------------------------------------")
 
-            # Exibindo a tabela de símbolos após o término da análise
-            print("\nTabela de Símbolos:")
-            for var, info in symbolsTable.get().items():
-                print(f"Nome: {var}", info)
-            # Limpa a tabela de símbolos após a análise deste arquivo
-            symbolsTable.clear()
-
-            print("\n###############################################")
