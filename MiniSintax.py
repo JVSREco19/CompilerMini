@@ -6,26 +6,26 @@ from symbols_table import SymbolTable
 
 
 def p_program(p):
-  'program : PROGRAM IDENTIFIER body'
+  '''program : PROGRAM IDENTIFIER body'''
   
 
 def p_body(p):
-  'body : declare_opt BEGIN stmt_list END'
+  '''body : declare_opt BEGIN stmt_list END'''
   
 
 def p_declare_opt(p):
-  'declare_opt : DECLARE decl_list'
+  '''declare_opt : DECLARE decl_list'''
   
 def p_decl_list(p):
-  'decl_list : decl  decl_list'
+  '''decl_list : decl  decl_list'''
   
 
 def p_decl_list_single(p):
-  'decl_list : decl'
+  '''decl_list : decl'''
   
 
 def p_decl(p):
-  'decl : type ident_list SEMICOLON '
+  '''decl : type ident_list SEMICOLON'''
   
 
 def p_type(p):
@@ -34,10 +34,10 @@ def p_type(p):
   
 
 def p_ident_list(p):
-  'ident_list : IDENTIFIER COMMA ident_list'
+  '''ident_list : IDENTIFIER COMMA ident_list'''
   
 def p_ident_list_single(p):
-  'ident_list : IDENTIFIER'
+  '''ident_list : IDENTIFIER'''
   
 def p_stmt_list(p):
   '''stmt_list : stmt SEMICOLON stmt_list 
@@ -57,7 +57,7 @@ def p_stmt(p):
   '''
   
 def p_assign_stmt(p):
-  'assign_stmt : IDENTIFIER ASSIGN simple_expr'
+  '''assign_stmt : IDENTIFIER ASSIGN simple_expr'''
   
 def p_if_stmt(p):
   '''if_stmt : IF condition THEN stmt_list END
@@ -65,27 +65,27 @@ def p_if_stmt(p):
   '''
   
 def p_do_while_stmt(p):
-  'do_while_stmt : DO stmt_list stmt_suffix'
-  print("Passou pelo do while")
+  '''do_while_stmt : DO stmt_list stmt_suffix'''
+
   
   
 def p_stmt_suffix(p):
-  'stmt_suffix : WHILE condition'
+  '''stmt_suffix : WHILE condition'''
   
 def p_for_stmt(p):
-  'for_stmt : FOR assign_stmt TO condition DO stmt_list END'
+  '''for_stmt : FOR assign_stmt TO condition DO stmt_list END'''
   
 def p_while_stmt(p):
-  'while_stmt : WHILE condition DO stmt_list END'
+  '''while_stmt : WHILE condition DO stmt_list END'''
   
 def p_condition(p):
-  'condition : expression'
+  '''condition : expression'''
   
 def p_read_stmt(p):
-  'read_stmt : READ LPAREN IDENTIFIER RPAREN'
+ '''read_stmt : READ LPAREN IDENTIFIER RPAREN'''
   
 def p_write_stmt(p):
-  'write_stmt : WRITE LPAREN writable RPAREN'
+  '''write_stmt : WRITE LPAREN writable RPAREN'''
   
 def p_writable(p):
   '''writable : simple_expr
@@ -95,7 +95,7 @@ def p_writable(p):
 def p_expression(p):
   '''expression : simple_expr
                 | expression RELOP expression
-                | LPAREN expression RPAREN
+                
   '''
   
 def p_simple_expr(p):
