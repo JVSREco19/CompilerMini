@@ -1,13 +1,31 @@
 import ply.yacc as yacc
-from MiniLexer import tokens, errorsList,createLexer
+from MiniLexer import tokens, errorsList,createLexer,symbolTable
 import os
-from symbols_table import SymbolTable 
+
+
+opHash = {
+    '=': lambda x, y: x == y,
+    '>': lambda x, y: x > y,
+    '>=': lambda x, y: x >= y,
+    '<': lambda x, y: x < y,
+    '<=': lambda x, y: x <= y,
+    '<>': lambda x, y: x != y,
+    '+': lambda x, y: x + y,
+    '-': lambda x, y: x - y,
+    'or': lambda x, y: x or y,
+    '*': lambda x, y: x * y,
+    '/': lambda x, y: x / y,
+    'mod': lambda x, y: x % y,
+    'and': lambda x, y: x and y,
+}
+
+
 # Definição das regras gramaticais
 
 
 def p_program(p):
   '''program : PROGRAM IDENTIFIER body'''
-  
+
 
 def p_body(p):
   '''body : declare_opt BEGIN stmt_list END'''
@@ -22,7 +40,7 @@ def p_decl_list(p):
 
 def p_decl_list_single(p):
   '''decl_list : decl'''
-  
+  p[0] = p[1]
 
 def p_decl(p):
   '''decl : type ident_list SEMICOLON'''
@@ -31,20 +49,23 @@ def p_decl(p):
 def p_type(p):
   '''type : INTEGER 
   | DECIMAL'''
-  
+  p[0] = p[1]
 
 def p_ident_list(p):
   '''ident_list : IDENTIFIER COMMA ident_list'''
   
 def p_ident_list_single(p):
   '''ident_list : IDENTIFIER'''
+  p[0] = p[1]
   
 def p_stmt_list(p):
   '''stmt_list : stmt SEMICOLON stmt_list 
   '''
+  
 def p_stmt_list_single(p):
   '''stmt_list : stmt SEMICOLON
   '''
+  
   
 def p_stmt(p):
   '''stmt : if_stmt 
@@ -55,10 +76,13 @@ def p_stmt(p):
             | read_stmt 
             | write_stmt 
   '''
+  p[0] = p[1]
   
 def p_assign_stmt(p):
   '''assign_stmt : IDENTIFIER ASSIGN simple_expr'''
-  
+  table[p[1]]['attribute']['Valor'] = p[3]
+
+
 def p_if_stmt(p):
   '''if_stmt : IF condition THEN stmt_list END
               | IF condition THEN stmt_list ELSE stmt_list END
@@ -80,10 +104,11 @@ def p_while_stmt(p):
   
 def p_condition(p):
   '''condition : expression'''
+  p[0] = p[1]
   
 def p_read_stmt(p):
  '''read_stmt : READ LPAREN IDENTIFIER RPAREN'''
-  
+
 def p_write_stmt(p):
   '''write_stmt : WRITE LPAREN writable RPAREN'''
   
@@ -91,13 +116,18 @@ def p_writable(p):
   '''writable : simple_expr
               | LITERAL
   '''
+  p[0] = p[1]
   
 def p_expression(p):
   '''expression : simple_expr
                 | expression RELOP expression
                 
   '''
-  
+  # if(len(p)==2):
+  #   p[0] = p[1]  
+  # else:
+  #   p[0] = opHash[p[2]](p[1],p[3])
+    
 def p_simple_expr(p):
   '''simple_expr : term
                   | simple_expr ADDOP simple_expr
@@ -105,7 +135,18 @@ def p_simple_expr(p):
                   | LPAREN simple_expr RPAREN
                   | simple_expr QUESTION_MARK simple_expr COLON simple_expr
   '''
-  
+  # if(len(p)==2):
+  #   p[0] = p[1]
+  # elif(len(p)==4):
+  #   if(p[1] == '('):
+  #     p[0] = p[2]
+  #   else:
+  #       p[0] = opHash[p[2]](p[1],p[3])
+  # else:
+  #   if(p[1]):
+  #     p[0] = p[3]
+  #   else:
+  #     p[0] = p[5]
 
 def p_mulop(p):
   '''mulop : MULOP
@@ -113,6 +154,7 @@ def p_mulop(p):
             | MOD
               
   '''
+  p[0] = p[1]
   
 
 def p_ADDOP(p):
@@ -121,37 +163,67 @@ def p_ADDOP(p):
             | OR
               
   '''
+  p[0] = p[1]
   
 def p_term(p):
   '''term : factor_a
           | term mulop factor_a
   '''
+  # if(len(p)== 2):
+  #   p[0] = p[1]
+  # else:
+  #   p[0] = opHash[p[2]](p[1],p[3])
+
   
 def p_factor_a(p):
   '''factor_a : factor
               | NOT factor
               | MINUS factor
   '''
+  if(len(p)==2):
+    p[0] = p[1]
+  else:
+    p[0] = not p[1]
+  
   
 def p_factor(p):
   '''factor : IDENTIFIER
             | CONSTANT
             | LPAREN expression RPAREN
   '''
+  if(len(p)==2):
+    if(p[1] in table):
+      p[0] = table[p[1]]['attribute']['Valor']
+    else:
+      p[0] = int(p[1])
+
+  else:
+    p[0] = p[2]
+  
+def p_error(p):
+  if p:
+    print("Syntax error at token", p.type)
+    # Just discard the token and tell the parser it's okay.
+    
+  else:
+    print("Syntax error at EOF")
   
 
 
 # Exemplo de uso do analisador sintático
 if __name__ == '__main__':
-    arquivos = os.listdir('./Testes/')
-    for arquivo in arquivos:
-              # Crie o analisador
-        parser = yacc.yacc()
-        lex = createLexer()
-        
-        caminho_arquivo = os.path.join('./Testes/', arquivo)
-        with open(caminho_arquivo, 'r', encoding='utf-8') as arquivo_txt:
-          programa = arquivo_txt.read()
-          print(arquivo)
-          result = parser.parse(programa)
-         
+  arquivos = os.listdir('./Testes/')
+  for arquivo in arquivos:
+    # Crie o analisador
+    lex = createLexer()
+    parser = yacc.yacc()
+    table = symbolTable.table
+    caminho_arquivo = os.path.join('./Testes/', arquivo)
+    with open(caminho_arquivo, 'r', encoding='utf-8') as arquivo_txt:
+      programa = arquivo_txt.read()
+      print("Verificando o " + arquivo+'\n')
+      result = parser.parse(programa)
+      print('\n'+"Tabela de simbolos: "+'\n')
+      for key,value in symbolTable.table.items():
+        print(key + ": "+ str(value))
+    symbolTable.clear()

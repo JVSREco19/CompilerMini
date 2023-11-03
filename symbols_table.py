@@ -2,7 +2,7 @@ class SymbolTable:
     def __init__(self):
         self.table = {}
 
-    def add(self, name, level, attribute):
+    def add(self, name, level = 0, attribute = {}):
         if name not in self.table:
             self.table[name] = {'level': level, 'attribute': attribute}
 
