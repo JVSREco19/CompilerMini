@@ -1,6 +1,10 @@
 import ply.yacc as yacc
-from MiniLexer import tokens, errorsList,createLexer,symbolTable
+from MiniLexer import tokens, errorsList,createLexer
+from symbols_table import SymbolTable
 import os
+
+symbolTable = SymbolTable()
+
 
 
 opHash = {
@@ -22,7 +26,6 @@ opHash = {
 
 # Definição das regras gramaticais
 
-
 def p_program(p):
   '''program : PROGRAM IDENTIFIER body'''
 
@@ -36,23 +39,29 @@ def p_declare_opt(p):
   
 def p_decl_list(p):
   '''decl_list : decl  decl_list'''
-  
+
 
 def p_decl_list_single(p):
   '''decl_list : decl'''
-  p[0] = p[1]
+
 
 def p_decl(p):
   '''decl : type ident_list SEMICOLON'''
+  IDs = p[2].split(',')
+  for i in IDs:
+    symbolTable.add(i,0,{"Tipo":p[1],"Valor":None})
   
-
 def p_type(p):
   '''type : INTEGER 
   | DECIMAL'''
   p[0] = p[1]
 
 def p_ident_list(p):
-  '''ident_list : IDENTIFIER COMMA ident_list'''
+  '''ident_list : IDENTIFIER COMMA ident_list
+                  '''
+  if(len(p)==4):
+    p[0] = p[1] + p[2] + p[3]
+
   
 def p_ident_list_single(p):
   '''ident_list : IDENTIFIER'''
@@ -80,7 +89,7 @@ def p_stmt(p):
   
 def p_assign_stmt(p):
   '''assign_stmt : IDENTIFIER ASSIGN simple_expr'''
-  table[p[1]]['attribute']['Valor'] = p[3]
+  symbolTable.get()[p[1]]['attribute']['Valor'] = p[3]
 
 
 def p_if_stmt(p):
@@ -188,17 +197,20 @@ def p_factor_a(p):
   
 def p_factor(p):
   '''factor : IDENTIFIER
-            | CONSTANT
             | LPAREN expression RPAREN
   '''
   if(len(p)==2):
-    if(p[1] in table):
-      p[0] = table[p[1]]['attribute']['Valor']
+    if(symbolTable.contains(p[1])):
+      p[0] = symbolTable.get()[p[1]]['attribute']['Valor']
     else:
-      p[0] = int(p[1])
-
+      print("Erro semantico")
   else:
     p[0] = p[2]
+    
+def p_factor(p):
+  '''factor : CONSTANT
+  '''
+  p[0] = p[1]
   
 def p_error(p):
   if p:
@@ -217,9 +229,9 @@ if __name__ == '__main__':
     # Crie o analisador
     lex = createLexer()
     parser = yacc.yacc()
-    table = symbolTable.table
     caminho_arquivo = os.path.join('./Testes/', arquivo)
     with open(caminho_arquivo, 'r', encoding='utf-8') as arquivo_txt:
+      symbolTable = SymbolTable()
       programa = arquivo_txt.read()
       print("Verificando o " + arquivo+'\n')
       result = parser.parse(programa)

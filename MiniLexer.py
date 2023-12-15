@@ -1,8 +1,6 @@
 import ply.lex as lex
 import os
-from symbols_table import SymbolTable
 
-symbolTable = SymbolTable()
 # Lista de palavras-chave reservadas em Mini
 reserved = {
     'program': 'PROGRAM',
@@ -69,8 +67,6 @@ t_QUESTION_MARK = r'\?'
 def t_IDENTIFIER(t):
     r'[a-zA-Z][a-zA-Z0-9]*'
     t.type = reserved.get(t.value, 'IDENTIFIER') # Verifica se está nas palabras reservadas, se nao estiver então é um ID
-    if(t.type=="IDENTIFIER"):
-        symbolTable.add(t.value,0,{"Tipo":t.type,"Linha":t.lexer.lineno,"Valor":None})
     return t
 
 # Expressão regular para ignorar comentários de uma linha
@@ -125,10 +121,10 @@ def runLexer(arquivo_txt):
 if __name__ == '__main__':
     arquivos = os.listdir('./Testes/')
     for arquivo in arquivos:
-        symbolTable = SymbolTable()
+        
         caminho_arquivo = os.path.join('./Testes/', arquivo)
         with open(caminho_arquivo, 'r', encoding='utf-8') as arquivo_txt:
             tokList = runLexer(arquivo_txt)
             for i in tokList:
                 print (i)
-            print(symbolTable.get())
+            
