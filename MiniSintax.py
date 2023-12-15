@@ -5,6 +5,8 @@ import os
 
 symbolTable = SymbolTable()
 
+current_rule = ""
+
 
 
 opHash = {
@@ -28,6 +30,8 @@ opHash = {
 
 def p_program(p):
   '''program : PROGRAM IDENTIFIER body'''
+  global current_rule
+  current_rule = "program"
 
 
 def p_body(p):
@@ -213,12 +217,11 @@ def p_factor(p):
   p[0] = p[1]
   
 def p_error(p):
-  if p:
-    print("Syntax error at token", p.type)
-    # Just discard the token and tell the parser it's okay.
-    
-  else:
-    print("Syntax error at EOF")
+    if p:
+        print(f"Syntax error at token {p.type} on line {p.lineno} and value {p.value} and rule :{current_rule}")
+
+    else:
+        print("Syntax error at EOF")
   
 
 
