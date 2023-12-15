@@ -36,17 +36,24 @@ def p_program(p):
 
 def p_body(p):
   '''body : declare_opt BEGIN stmt_list END'''
-  
+  global current_rule
+  current_rule = "body"
 
 def p_declare_opt(p):
   '''declare_opt : DECLARE decl_list'''
-  
+  global current_rule
+  current_rule = "declare_opt"
+
 def p_decl_list(p):
   '''decl_list : decl  decl_list'''
+  global current_rule
+  current_rule = "decl_list"
 
 
 def p_decl_list_single(p):
   '''decl_list : decl'''
+  global current_rule
+  current_rule = "decl_list_single"
 
 
 def p_decl(p):
@@ -54,30 +61,42 @@ def p_decl(p):
   IDs = p[2].split(',')
   for i in IDs:
     symbolTable.add(i,0,{"Tipo":p[1],"Valor":None})
+    global current_rule
+    current_rule = "decl"
   
 def p_type(p):
   '''type : INTEGER 
   | DECIMAL'''
   p[0] = p[1]
+  global current_rule
+  current_rule = "type"
 
 def p_ident_list(p):
   '''ident_list : IDENTIFIER COMMA ident_list
                   '''
   if(len(p)==4):
     p[0] = p[1] + p[2] + p[3]
+  global current_rule
+  current_rule = "ident_list"
 
   
 def p_ident_list_single(p):
   '''ident_list : IDENTIFIER'''
   p[0] = p[1]
-  
+  global current_rule
+  current_rule = "ident_list_single"
+
 def p_stmt_list(p):
   '''stmt_list : stmt SEMICOLON stmt_list 
   '''
+  global current_rule
+  current_rule = "stmt_list"
   
 def p_stmt_list_single(p):
   '''stmt_list : stmt SEMICOLON
   '''
+  global current_rule
+  current_rule = "stmt_list_single"
   
   
 def p_stmt(p):
@@ -90,52 +109,74 @@ def p_stmt(p):
             | write_stmt 
   '''
   p[0] = p[1]
+  global current_rule
+  current_rule = "stmt"
   
 def p_assign_stmt(p):
   '''assign_stmt : IDENTIFIER ASSIGN simple_expr'''
   symbolTable.get()[p[1]]['attribute']['Valor'] = p[3]
+  global current_rule
+  current_rule = "assign_stmt"
 
 
 def p_if_stmt(p):
   '''if_stmt : IF condition THEN stmt_list END
               | IF condition THEN stmt_list ELSE stmt_list END
   '''
+  global current_rule
+  current_rule = "if_stmt"
   
 def p_do_while_stmt(p):
   '''do_while_stmt : DO stmt_list stmt_suffix'''
-
-  
+  global current_rule
+  current_rule = "do_while_stmt"
   
 def p_stmt_suffix(p):
   '''stmt_suffix : WHILE condition'''
+  global current_rule
+  current_rule = "stmt_suffix"
   
 def p_for_stmt(p):
   '''for_stmt : FOR assign_stmt TO condition DO stmt_list END'''
+  global current_rule
+  current_rule = "for_stmt"
   
 def p_while_stmt(p):
   '''while_stmt : WHILE condition DO stmt_list END'''
+  global current_rule
+  current_rule = "while_stmt"
   
 def p_condition(p):
   '''condition : expression'''
   p[0] = p[1]
+  global current_rule
+  current_rule = "condition"
   
 def p_read_stmt(p):
  '''read_stmt : READ LPAREN IDENTIFIER RPAREN'''
-
+ global current_rule
+ current_rule = "read_stmt"
+ 
 def p_write_stmt(p):
   '''write_stmt : WRITE LPAREN writable RPAREN'''
-  
+  global current_rule
+  current_rule = "write_stmt"
+ 
 def p_writable(p):
   '''writable : simple_expr
               | LITERAL
   '''
   p[0] = p[1]
+  global current_rule
+  current_rule = "writable"
   
 def p_expression(p):
   '''expression : simple_expr
                 | expression RELOP expression
                 
   '''
+  global current_rule
+  current_rule = "expression"
   # if(len(p)==2):
   #   p[0] = p[1]  
   # else:
@@ -148,6 +189,9 @@ def p_simple_expr(p):
                   | LPAREN simple_expr RPAREN
                   | simple_expr QUESTION_MARK simple_expr COLON simple_expr
   '''
+  global current_rule
+  current_rule = "simple_expr "
+
   # if(len(p)==2):
   #   p[0] = p[1]
   # elif(len(p)==4):
@@ -168,7 +212,8 @@ def p_mulop(p):
               
   '''
   p[0] = p[1]
-  
+  global current_rule
+  current_rule = "mulop"
 
 def p_ADDOP(p):
   '''ADDOP : MINUS
@@ -177,11 +222,16 @@ def p_ADDOP(p):
               
   '''
   p[0] = p[1]
+  global current_rule
+  current_rule = "ADDOP"
   
 def p_term(p):
   '''term : factor_a
           | term mulop factor_a
   '''
+  global current_rule
+  current_rule = "term"
+  
   # if(len(p)== 2):
   #   p[0] = p[1]
   # else:
@@ -197,7 +247,8 @@ def p_factor_a(p):
     p[0] = p[1]
   else:
     p[0] = not p[1]
-  
+  global current_rule
+  current_rule = "factor_a"
   
 def p_factor(p):
   '''factor : IDENTIFIER
@@ -210,11 +261,15 @@ def p_factor(p):
       print("Erro semantico")
   else:
     p[0] = p[2]
+  global current_rule
+  current_rule = "factor"
     
 def p_factor(p):
   '''factor : CONSTANT
   '''
   p[0] = p[1]
+  global current_rule
+  current_rule = "factor"
   
 def p_error(p):
     if p:
@@ -222,7 +277,8 @@ def p_error(p):
 
     else:
         print("Syntax error at EOF")
-  
+    global current_rule
+    current_rule = "error"
 
 
 # Exemplo de uso do analisador sintático
