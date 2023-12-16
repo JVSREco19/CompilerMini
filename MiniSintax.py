@@ -90,17 +90,18 @@ def p_ident_list_single(p):
   current_rule = "ident_list_single"
 
 def p_stmt_list(p):
-  '''stmt_list : stmt SEMICOLON stmt_list 
+  '''stmt_list : stmt SEMICOLON stmt_list_aux
   '''
   global current_rule
   current_rule = "stmt_list"
-  
-def p_stmt_list_single(p):
-  '''stmt_list : stmt SEMICOLON
+
+def p_stmt_list_aux(p):
+  '''stmt_list_aux : stmt_list
+  | empty
   '''
   global current_rule
-  current_rule = "stmt_list_single"
-  
+  current_rule = "stmt_list"
+    
   
 def p_stmt(p):
   '''stmt : if_stmt 
@@ -136,12 +137,14 @@ def p_if_stmt(p):
   current_rule = "if_stmt"
   
 def p_do_while_stmt(p):
-  '''do_while_stmt : DO stmt_list stmt_suffix'''
+  '''do_while_stmt : DO stmt_list END SEMICOLON stmt_suffix'''
+  
   global current_rule
   current_rule = "do_while_stmt"
   
 def p_stmt_suffix(p):
   '''stmt_suffix : WHILE condition'''
+  
   global current_rule
   current_rule = "stmt_suffix"
   
@@ -157,7 +160,9 @@ def p_while_stmt(p):
   
 def p_condition(p):
   '''condition : expression'''
+  
   p[0] = p[1]
+  
   global current_rule
   current_rule = "condition"
   

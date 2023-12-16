@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'ADD AND ASSIGN BEGIN COLON COMMA COMMENT CONSTANT DECIMAL DECLARE DO ELSE END FOR IDENTIFIER IF INTEGER LITERAL LPAREN MINUS MOD MULOP NOT OR PROGRAM QUESTION_MARK READ RELOP RPAREN SEMICOLON SHIFTOP THEN TO WHILE WRITEprogram : PROGRAM IDENTIFIER bodybody : declare_opt BEGIN stmt_list ENDdeclare_opt : DECLARE decl_listdecl_list : decl  decl_listdecl_list : decldecl : type ident_list SEMICOLONtype : INTEGER \n  | DECIMALident_list : IDENTIFIER COMMA ident_list\n  ident_list : IDENTIFIERstmt_list : stmt SEMICOLON stmt_list \n  stmt_list : stmt SEMICOLON\n  stmt : if_stmt \n            | assign_stmt \n            | while_stmt \n            | do_while_stmt \n            | for_stmt \n            | read_stmt \n            | write_stmt \n  assign_stmt : IDENTIFIER ASSIGN simple_exprif_stmt : IF condition THEN stmt_list END\n              | IF condition THEN stmt_list ELSE stmt_list END\n  do_while_stmt : DO stmt_list stmt_suffixstmt_suffix : WHILE conditionfor_stmt : FOR assign_stmt TO condition DO stmt_list ENDwhile_stmt : WHILE condition DO stmt_list ENDcondition : expressionread_stmt : READ LPAREN IDENTIFIER RPARENwrite_stmt : WRITE LPAREN writable RPARENwritable : simple_expr\n              | LITERAL\n  expression : simple_expr aux_expression\n                \n  aux_expression : RELOP simple_expr\n                  | empty\n                \n  simple_expr : term\n                  | simple_expr ADDOP term\n                  | par_simple_expr QUESTION_MARK simple_expr COLON simple_expr\n  par_simple_expr : LPAREN expression RPAREN\n\n  mulop : MULOP\n            | AND\n            | MOD\n              \n  ADDOP : MINUS\n            | ADD\n            | OR\n              \n  term : factor_a\n          | term mulop factor_a\n  factor_a : factor\n              | NOT factor\n              | MINUS factor\n  factor : IDENTIFIER\n            | LPAREN expression RPAREN\n            | CONSTANT\n \n  empty :'
+_lr_signature = 'ADD AND ASSIGN BEGIN COLON COMMA COMMENT CONSTANT DECIMAL DECLARE DO ELSE END FOR IDENTIFIER IF INTEGER LITERAL LPAREN MINUS MOD MULOP NOT OR PROGRAM QUESTION_MARK READ RELOP RPAREN SEMICOLON SHIFTOP THEN TO WHILE WRITEprogram : PROGRAM IDENTIFIER bodybody : declare_opt BEGIN stmt_list ENDdeclare_opt : DECLARE decl_listdecl_list : decl  decl_listdecl_list : decldecl : type ident_list SEMICOLONtype : INTEGER \n  | DECIMALident_list : IDENTIFIER COMMA ident_list\n  ident_list : IDENTIFIERstmt_list : stmt SEMICOLON stmt_list_aux\n  stmt_list_aux : stmt_list\n  | empty\n  stmt : if_stmt \n            | assign_stmt \n            | while_stmt \n            | do_while_stmt \n            | for_stmt \n            | read_stmt \n            | write_stmt \n  assign_stmt : IDENTIFIER ASSIGN simple_exprif_stmt : IF condition THEN stmt_list END\n              | IF condition THEN stmt_list ELSE stmt_list END\n  do_while_stmt : DO stmt_list END SEMICOLON stmt_suffixstmt_suffix : WHILE conditionfor_stmt : FOR assign_stmt TO condition DO stmt_list ENDwhile_stmt : WHILE condition DO stmt_list ENDcondition : expressionread_stmt : READ LPAREN IDENTIFIER RPARENwrite_stmt : WRITE LPAREN writable RPARENwritable : simple_expr\n              | LITERAL\n  expression : simple_expr aux_expression\n                \n  aux_expression : RELOP simple_expr\n                  | empty\n                \n  simple_expr : term\n                  | simple_expr ADDOP term\n                  | par_simple_expr QUESTION_MARK simple_expr COLON simple_expr\n  par_simple_expr : LPAREN expression RPAREN\n\n  mulop : MULOP\n            | AND\n            | MOD\n              \n  ADDOP : MINUS\n            | ADD\n            | OR\n              \n  term : factor_a\n          | term mulop factor_a\n  factor_a : factor\n              | NOT factor\n              | MINUS factor\n  factor : IDENTIFIER\n            | LPAREN expression RPAREN\n            | CONSTANT\n \n  empty :'
     
-_lr_action_items = {'PROGRAM':([0,],[2,]),'$end':([1,4,32,],[0,-1,-2,]),'IDENTIFIER':([2,7,10,11,12,22,24,25,26,33,40,42,43,46,50,51,53,55,57,58,60,61,62,63,64,65,66,67,70,73,75,76,95,96,99,],[3,23,31,-7,-8,44,44,23,23,23,44,44,44,44,77,44,31,23,44,44,-42,-43,-44,44,-39,-40,-41,44,44,23,44,44,23,44,23,]),'DECLARE':([3,],[6,]),'BEGIN':([5,8,9,29,52,],[7,-3,-5,-4,-6,]),'INTEGER':([6,9,52,],[11,11,-6,]),'DECIMAL':([6,9,52,],[12,12,-6,]),'IF':([7,25,33,55,73,95,99,],[22,22,22,22,22,22,22,]),'WHILE':([7,25,33,48,54,55,73,95,99,],[24,24,24,75,-11,24,24,24,24,]),'DO':([7,25,33,35,36,37,39,41,44,45,47,55,56,59,69,71,73,83,84,85,87,91,95,97,99,101,],[25,25,25,-27,-53,-35,-45,-47,-50,-52,73,25,-32,-34,-48,-49,25,-36,-33,-46,-51,99,25,-51,25,-37,]),'FOR':([7,25,33,55,73,95,99,],[26,26,26,26,26,26,26,]),'READ':([7,25,33,55,73,95,99,],[27,27,27,27,27,27,27,]),'WRITE':([7,25,33,55,73,95,99,],[28,28,28,28,28,28,28,]),'END':([13,33,54,82,89,100,102,],[32,-12,-11,94,98,103,104,]),'SEMICOLON':([14,15,16,17,18,19,20,21,30,31,35,36,37,39,41,44,45,56,59,69,71,72,74,81,83,84,85,87,90,92,93,94,97,98,101,103,104,],[33,-13,-14,-15,-16,-17,-18,-19,52,-10,-27,-53,-35,-45,-47,-50,-52,-32,-34,-48,-49,-20,-23,-9,-36,-33,-46,-51,-24,-28,-29,-21,-51,-26,-37,-22,-25,]),'LPAREN':([22,24,27,28,40,42,43,46,51,57,58,60,61,62,63,64,65,66,67,70,75,76,96,],[40,40,50,51,40,70,70,40,40,70,40,-42,-43,-44,70,-39,-40,-41,40,40,40,40,40,]),'NOT':([22,24,40,46,51,57,58,60,61,62,63,64,65,66,67,70,75,76,96,],[42,42,42,42,42,42,42,-42,-43,-44,42,-39,-40,-41,42,42,42,42,42,]),'MINUS':([22,24,36,37,39,40,41,44,45,46,51,57,58,60,61,62,63,64,65,66,67,69,70,71,72,75,76,79,83,84,85,86,87,96,97,101,],[43,43,60,-35,-45,43,-47,-50,-52,43,43,43,43,-42,-43,-44,43,-39,-40,-41,43,-48,43,-49,60,43,43,60,-36,60,-46,60,-51,43,-51,60,]),'CONSTANT':([22,24,40,42,43,46,51,57,58,60,61,62,63,64,65,66,67,70,75,76,96,],[45,45,45,45,45,45,45,45,45,-42,-43,-44,45,-39,-40,-41,45,45,45,45,45,]),'ASSIGN':([23,],[46,]),'COMMA':([31,],[53,]),'ELSE':([33,54,82,],[-12,-11,95,]),'THEN':([34,35,36,37,39,41,44,45,56,59,69,71,83,84,85,87,97,101,],[55,-27,-53,-35,-45,-47,-50,-52,-32,-34,-48,-49,-36,-33,-46,-51,-51,-37,]),'RELOP':([36,37,39,41,44,45,69,71,83,85,87,97,101,],[58,-35,-45,-47,-50,-52,-48,-49,-36,-46,-51,-51,-37,]),'ADD':([36,37,39,41,44,45,69,71,72,79,83,84,85,86,87,97,101,],[61,-35,-45,-47,-50,-52,-48,-49,61,61,-36,61,-46,61,-51,-51,61,]),'OR':([36,37,39,41,44,45,69,71,72,79,83,84,85,86,87,97,101,],[62,-35,-45,-47,-50,-52,-48,-49,62,62,-36,62,-46,62,-51,-51,62,]),'RPAREN':([36,37,39,41,44,45,56,59,68,69,71,77,78,79,80,83,84,85,87,88,97,101,],[-53,-35,-45,-47,-50,-52,-32,-34,87,-48,-49,92,93,-30,-31,-36,-33,-46,-51,97,-51,-37,]),'TO':([37,39,41,44,45,49,69,71,72,83,85,87,97,101,],[-35,-45,-47,-50,-52,76,-48,-49,-20,-36,-46,-51,-51,-37,]),'COLON':([37,39,41,44,45,69,71,83,85,86,87,97,101,],[-35,-45,-47,-50,-52,-48,-49,-36,-46,96,-51,-51,-37,]),'MULOP':([37,39,41,44,45,69,71,83,85,87,97,],[64,-45,-47,-50,-52,-48,-49,64,-46,-51,-51,]),'AND':([37,39,41,44,45,69,71,83,85,87,97,],[65,-45,-47,-50,-52,-48,-49,65,-46,-51,-51,]),'MOD':([37,39,41,44,45,69,71,83,85,87,97,],[66,-45,-47,-50,-52,-48,-49,66,-46,-51,-51,]),'QUESTION_MARK':([38,87,],[67,-38,]),'LITERAL':([51,],[80,]),}
+_lr_action_items = {'PROGRAM':([0,],[2,]),'$end':([1,4,32,],[0,-1,-2,]),'IDENTIFIER':([2,7,10,11,12,22,24,25,26,33,40,42,43,46,50,51,53,57,59,60,62,63,64,65,66,67,68,69,72,75,77,96,97,101,102,],[3,23,31,-7,-8,44,44,23,23,23,44,44,44,44,78,44,31,23,44,44,-43,-44,-45,44,-40,-41,-42,44,44,23,44,23,44,44,23,]),'DECLARE':([3,],[6,]),'BEGIN':([5,8,9,29,52,],[7,-3,-5,-4,-6,]),'INTEGER':([6,9,52,],[11,11,-6,]),'DECIMAL':([6,9,52,],[12,12,-6,]),'IF':([7,25,33,57,75,96,102,],[22,22,22,22,22,22,22,]),'WHILE':([7,25,33,57,75,91,96,102,],[24,24,24,24,24,101,24,24,]),'DO':([7,25,33,35,36,37,39,41,44,45,47,57,58,61,71,73,75,84,85,86,88,92,96,98,102,104,],[25,25,25,-28,-54,-36,-46,-48,-51,-53,75,25,-33,-35,-49,-50,25,-37,-34,-47,-52,102,25,-52,25,-38,]),'FOR':([7,25,33,57,75,96,102,],[26,26,26,26,26,26,26,]),'READ':([7,25,33,57,75,96,102,],[27,27,27,27,27,27,27,]),'WRITE':([7,25,33,57,75,96,102,],[28,28,28,28,28,28,28,]),'END':([13,33,48,54,55,56,83,90,103,106,],[32,-54,76,-11,-12,-13,95,99,107,108,]),'SEMICOLON':([14,15,16,17,18,19,20,21,30,31,35,36,37,39,41,44,45,58,61,71,73,74,76,82,84,85,86,88,93,94,95,98,99,100,104,105,107,108,],[33,-14,-15,-16,-17,-18,-19,-20,52,-10,-28,-54,-36,-46,-48,-51,-53,-33,-35,-49,-50,-21,91,-9,-37,-34,-47,-52,-29,-30,-22,-52,-27,-24,-38,-25,-23,-26,]),'LPAREN':([22,24,27,28,40,42,43,46,51,59,60,62,63,64,65,66,67,68,69,72,77,97,101,],[40,40,50,51,40,72,72,40,40,72,40,-43,-44,-45,72,-40,-41,-42,40,40,40,40,40,]),'NOT':([22,24,40,46,51,59,60,62,63,64,65,66,67,68,69,72,77,97,101,],[42,42,42,42,42,42,42,-43,-44,-45,42,-40,-41,-42,42,42,42,42,42,]),'MINUS':([22,24,36,37,39,40,41,44,45,46,51,59,60,62,63,64,65,66,67,68,69,71,72,73,74,77,80,84,85,86,87,88,97,98,101,104,],[43,43,62,-36,-46,43,-48,-51,-53,43,43,43,43,-43,-44,-45,43,-40,-41,-42,43,-49,43,-50,62,43,62,-37,62,-47,62,-52,43,-52,43,62,]),'CONSTANT':([22,24,40,42,43,46,51,59,60,62,63,64,65,66,67,68,69,72,77,97,101,],[45,45,45,45,45,45,45,45,45,-43,-44,-45,45,-40,-41,-42,45,45,45,45,45,]),'ASSIGN':([23,],[46,]),'COMMA':([31,],[53,]),'ELSE':([33,54,55,56,83,],[-54,-11,-12,-13,96,]),'THEN':([34,35,36,37,39,41,44,45,58,61,71,73,84,85,86,88,98,104,],[57,-28,-54,-36,-46,-48,-51,-53,-33,-35,-49,-50,-37,-34,-47,-52,-52,-38,]),'RELOP':([36,37,39,41,44,45,71,73,84,86,88,98,104,],[60,-36,-46,-48,-51,-53,-49,-50,-37,-47,-52,-52,-38,]),'ADD':([36,37,39,41,44,45,71,73,74,80,84,85,86,87,88,98,104,],[63,-36,-46,-48,-51,-53,-49,-50,63,63,-37,63,-47,63,-52,-52,63,]),'OR':([36,37,39,41,44,45,71,73,74,80,84,85,86,87,88,98,104,],[64,-36,-46,-48,-51,-53,-49,-50,64,64,-37,64,-47,64,-52,-52,64,]),'RPAREN':([36,37,39,41,44,45,58,61,70,71,73,78,79,80,81,84,85,86,88,89,98,104,],[-54,-36,-46,-48,-51,-53,-33,-35,88,-49,-50,93,94,-31,-32,-37,-34,-47,-52,98,-52,-38,]),'TO':([37,39,41,44,45,49,71,73,74,84,86,88,98,104,],[-36,-46,-48,-51,-53,77,-49,-50,-21,-37,-47,-52,-52,-38,]),'COLON':([37,39,41,44,45,71,73,84,86,87,88,98,104,],[-36,-46,-48,-51,-53,-49,-50,-37,-47,97,-52,-52,-38,]),'MULOP':([37,39,41,44,45,71,73,84,86,88,98,],[66,-46,-48,-51,-53,-49,-50,66,-47,-52,-52,]),'AND':([37,39,41,44,45,71,73,84,86,88,98,],[67,-46,-48,-51,-53,-49,-50,67,-47,-52,-52,]),'MOD':([37,39,41,44,45,71,73,84,86,88,98,],[68,-46,-48,-51,-53,-49,-50,68,-47,-52,-52,]),'QUESTION_MARK':([38,88,],[69,-39,]),'LITERAL':([51,],[81,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'program':([0,],[1,]),'body':([3,],[4,]),'declare_opt':([3,],[5,]),'decl_list':([6,9,],[8,29,]),'decl':([6,9,],[9,9,]),'type':([6,9,],[10,10,]),'stmt_list':([7,25,33,55,73,95,99,],[13,48,54,82,89,100,102,]),'stmt':([7,25,33,55,73,95,99,],[14,14,14,14,14,14,14,]),'if_stmt':([7,25,33,55,73,95,99,],[15,15,15,15,15,15,15,]),'assign_stmt':([7,25,26,33,55,73,95,99,],[16,16,49,16,16,16,16,16,]),'while_stmt':([7,25,33,55,73,95,99,],[17,17,17,17,17,17,17,]),'do_while_stmt':([7,25,33,55,73,95,99,],[18,18,18,18,18,18,18,]),'for_stmt':([7,25,33,55,73,95,99,],[19,19,19,19,19,19,19,]),'read_stmt':([7,25,33,55,73,95,99,],[20,20,20,20,20,20,20,]),'write_stmt':([7,25,33,55,73,95,99,],[21,21,21,21,21,21,21,]),'ident_list':([10,53,],[30,81,]),'condition':([22,24,75,76,],[34,47,90,91,]),'expression':([22,24,40,70,75,76,],[35,35,68,88,35,35,]),'simple_expr':([22,24,40,46,51,58,67,70,75,76,96,],[36,36,36,72,79,84,86,36,36,36,101,]),'term':([22,24,40,46,51,57,58,67,70,75,76,96,],[37,37,37,37,37,83,37,37,37,37,37,37,]),'par_simple_expr':([22,24,40,46,51,58,67,70,75,76,96,],[38,38,38,38,38,38,38,38,38,38,38,]),'factor_a':([22,24,40,46,51,57,58,63,67,70,75,76,96,],[39,39,39,39,39,39,39,85,39,39,39,39,39,]),'factor':([22,24,40,42,43,46,51,57,58,63,67,70,75,76,96,],[41,41,41,69,71,41,41,41,41,41,41,41,41,41,41,]),'aux_expression':([36,],[56,]),'ADDOP':([36,72,79,84,86,101,],[57,57,57,57,57,57,]),'empty':([36,],[59,]),'mulop':([37,83,],[63,63,]),'stmt_suffix':([48,],[74,]),'writable':([51,],[78,]),}
+_lr_goto_items = {'program':([0,],[1,]),'body':([3,],[4,]),'declare_opt':([3,],[5,]),'decl_list':([6,9,],[8,29,]),'decl':([6,9,],[9,9,]),'type':([6,9,],[10,10,]),'stmt_list':([7,25,33,57,75,96,102,],[13,48,55,83,90,103,106,]),'stmt':([7,25,33,57,75,96,102,],[14,14,14,14,14,14,14,]),'if_stmt':([7,25,33,57,75,96,102,],[15,15,15,15,15,15,15,]),'assign_stmt':([7,25,26,33,57,75,96,102,],[16,16,49,16,16,16,16,16,]),'while_stmt':([7,25,33,57,75,96,102,],[17,17,17,17,17,17,17,]),'do_while_stmt':([7,25,33,57,75,96,102,],[18,18,18,18,18,18,18,]),'for_stmt':([7,25,33,57,75,96,102,],[19,19,19,19,19,19,19,]),'read_stmt':([7,25,33,57,75,96,102,],[20,20,20,20,20,20,20,]),'write_stmt':([7,25,33,57,75,96,102,],[21,21,21,21,21,21,21,]),'ident_list':([10,53,],[30,82,]),'condition':([22,24,77,101,],[34,47,92,105,]),'expression':([22,24,40,72,77,101,],[35,35,70,89,35,35,]),'simple_expr':([22,24,40,46,51,60,69,72,77,97,101,],[36,36,36,74,80,85,87,36,36,104,36,]),'term':([22,24,40,46,51,59,60,69,72,77,97,101,],[37,37,37,37,37,84,37,37,37,37,37,37,]),'par_simple_expr':([22,24,40,46,51,60,69,72,77,97,101,],[38,38,38,38,38,38,38,38,38,38,38,]),'factor_a':([22,24,40,46,51,59,60,65,69,72,77,97,101,],[39,39,39,39,39,39,39,86,39,39,39,39,39,]),'factor':([22,24,40,42,43,46,51,59,60,65,69,72,77,97,101,],[41,41,41,71,73,41,41,41,41,41,41,41,41,41,41,]),'stmt_list_aux':([33,],[54,]),'empty':([33,36,],[56,61,]),'aux_expression':([36,],[58,]),'ADDOP':([36,74,80,85,87,104,],[59,59,59,59,59,59,]),'mulop':([37,84,],[65,65,]),'writable':([51,],[79,]),'stmt_suffix':([91,],[100,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -37,47 +37,48 @@ _lr_productions = [
   ('type -> DECIMAL','type',1,'p_type','MiniSintax.py',69),
   ('ident_list -> IDENTIFIER COMMA ident_list','ident_list',3,'p_ident_list','MiniSintax.py',75),
   ('ident_list -> IDENTIFIER','ident_list',1,'p_ident_list_single','MiniSintax.py',86),
-  ('stmt_list -> stmt SEMICOLON stmt_list','stmt_list',3,'p_stmt_list','MiniSintax.py',93),
-  ('stmt_list -> stmt SEMICOLON','stmt_list',2,'p_stmt_list_single','MiniSintax.py',99),
-  ('stmt -> if_stmt','stmt',1,'p_stmt','MiniSintax.py',106),
-  ('stmt -> assign_stmt','stmt',1,'p_stmt','MiniSintax.py',107),
-  ('stmt -> while_stmt','stmt',1,'p_stmt','MiniSintax.py',108),
-  ('stmt -> do_while_stmt','stmt',1,'p_stmt','MiniSintax.py',109),
-  ('stmt -> for_stmt','stmt',1,'p_stmt','MiniSintax.py',110),
-  ('stmt -> read_stmt','stmt',1,'p_stmt','MiniSintax.py',111),
-  ('stmt -> write_stmt','stmt',1,'p_stmt','MiniSintax.py',112),
-  ('assign_stmt -> IDENTIFIER ASSIGN simple_expr','assign_stmt',3,'p_assign_stmt','MiniSintax.py',119),
-  ('if_stmt -> IF condition THEN stmt_list END','if_stmt',5,'p_if_stmt','MiniSintax.py',132),
-  ('if_stmt -> IF condition THEN stmt_list ELSE stmt_list END','if_stmt',7,'p_if_stmt','MiniSintax.py',133),
-  ('do_while_stmt -> DO stmt_list stmt_suffix','do_while_stmt',3,'p_do_while_stmt','MiniSintax.py',139),
-  ('stmt_suffix -> WHILE condition','stmt_suffix',2,'p_stmt_suffix','MiniSintax.py',144),
-  ('for_stmt -> FOR assign_stmt TO condition DO stmt_list END','for_stmt',7,'p_for_stmt','MiniSintax.py',149),
-  ('while_stmt -> WHILE condition DO stmt_list END','while_stmt',5,'p_while_stmt','MiniSintax.py',154),
-  ('condition -> expression','condition',1,'p_condition','MiniSintax.py',159),
-  ('read_stmt -> READ LPAREN IDENTIFIER RPAREN','read_stmt',4,'p_read_stmt','MiniSintax.py',165),
-  ('write_stmt -> WRITE LPAREN writable RPAREN','write_stmt',4,'p_write_stmt','MiniSintax.py',175),
-  ('writable -> simple_expr','writable',1,'p_writable','MiniSintax.py',180),
-  ('writable -> LITERAL','writable',1,'p_writable','MiniSintax.py',181),
-  ('expression -> simple_expr aux_expression','expression',2,'p_expression','MiniSintax.py',188),
-  ('aux_expression -> RELOP simple_expr','aux_expression',2,'p_aux_expression','MiniSintax.py',199),
-  ('aux_expression -> empty','aux_expression',1,'p_aux_expression','MiniSintax.py',200),
-  ('simple_expr -> term','simple_expr',1,'p_simple_expr','MiniSintax.py',211),
-  ('simple_expr -> simple_expr ADDOP term','simple_expr',3,'p_simple_expr','MiniSintax.py',212),
-  ('simple_expr -> par_simple_expr QUESTION_MARK simple_expr COLON simple_expr','simple_expr',5,'p_simple_expr','MiniSintax.py',213),
-  ('par_simple_expr -> LPAREN expression RPAREN','par_simple_expr',3,'p_par_simple_expr','MiniSintax.py',232),
-  ('mulop -> MULOP','mulop',1,'p_mulop','MiniSintax.py',239),
-  ('mulop -> AND','mulop',1,'p_mulop','MiniSintax.py',240),
-  ('mulop -> MOD','mulop',1,'p_mulop','MiniSintax.py',241),
-  ('ADDOP -> MINUS','ADDOP',1,'p_ADDOP','MiniSintax.py',249),
-  ('ADDOP -> ADD','ADDOP',1,'p_ADDOP','MiniSintax.py',250),
-  ('ADDOP -> OR','ADDOP',1,'p_ADDOP','MiniSintax.py',251),
-  ('term -> factor_a','term',1,'p_term','MiniSintax.py',259),
-  ('term -> term mulop factor_a','term',3,'p_term','MiniSintax.py',260),
-  ('factor_a -> factor','factor_a',1,'p_factor_a','MiniSintax.py',272),
-  ('factor_a -> NOT factor','factor_a',2,'p_factor_a','MiniSintax.py',273),
-  ('factor_a -> MINUS factor','factor_a',2,'p_factor_a','MiniSintax.py',274),
-  ('factor -> IDENTIFIER','factor',1,'p_factor','MiniSintax.py',285),
-  ('factor -> LPAREN expression RPAREN','factor',3,'p_factor','MiniSintax.py',286),
-  ('factor -> CONSTANT','factor',1,'p_factor','MiniSintax.py',287),
-  ('empty -> <empty>','empty',0,'p_empty','MiniSintax.py',316),
+  ('stmt_list -> stmt SEMICOLON stmt_list_aux','stmt_list',3,'p_stmt_list','MiniSintax.py',93),
+  ('stmt_list_aux -> stmt_list','stmt_list_aux',1,'p_stmt_list_aux','MiniSintax.py',99),
+  ('stmt_list_aux -> empty','stmt_list_aux',1,'p_stmt_list_aux','MiniSintax.py',100),
+  ('stmt -> if_stmt','stmt',1,'p_stmt','MiniSintax.py',107),
+  ('stmt -> assign_stmt','stmt',1,'p_stmt','MiniSintax.py',108),
+  ('stmt -> while_stmt','stmt',1,'p_stmt','MiniSintax.py',109),
+  ('stmt -> do_while_stmt','stmt',1,'p_stmt','MiniSintax.py',110),
+  ('stmt -> for_stmt','stmt',1,'p_stmt','MiniSintax.py',111),
+  ('stmt -> read_stmt','stmt',1,'p_stmt','MiniSintax.py',112),
+  ('stmt -> write_stmt','stmt',1,'p_stmt','MiniSintax.py',113),
+  ('assign_stmt -> IDENTIFIER ASSIGN simple_expr','assign_stmt',3,'p_assign_stmt','MiniSintax.py',120),
+  ('if_stmt -> IF condition THEN stmt_list END','if_stmt',5,'p_if_stmt','MiniSintax.py',133),
+  ('if_stmt -> IF condition THEN stmt_list ELSE stmt_list END','if_stmt',7,'p_if_stmt','MiniSintax.py',134),
+  ('do_while_stmt -> DO stmt_list END SEMICOLON stmt_suffix','do_while_stmt',5,'p_do_while_stmt','MiniSintax.py',140),
+  ('stmt_suffix -> WHILE condition','stmt_suffix',2,'p_stmt_suffix','MiniSintax.py',146),
+  ('for_stmt -> FOR assign_stmt TO condition DO stmt_list END','for_stmt',7,'p_for_stmt','MiniSintax.py',152),
+  ('while_stmt -> WHILE condition DO stmt_list END','while_stmt',5,'p_while_stmt','MiniSintax.py',157),
+  ('condition -> expression','condition',1,'p_condition','MiniSintax.py',162),
+  ('read_stmt -> READ LPAREN IDENTIFIER RPAREN','read_stmt',4,'p_read_stmt','MiniSintax.py',170),
+  ('write_stmt -> WRITE LPAREN writable RPAREN','write_stmt',4,'p_write_stmt','MiniSintax.py',180),
+  ('writable -> simple_expr','writable',1,'p_writable','MiniSintax.py',185),
+  ('writable -> LITERAL','writable',1,'p_writable','MiniSintax.py',186),
+  ('expression -> simple_expr aux_expression','expression',2,'p_expression','MiniSintax.py',193),
+  ('aux_expression -> RELOP simple_expr','aux_expression',2,'p_aux_expression','MiniSintax.py',204),
+  ('aux_expression -> empty','aux_expression',1,'p_aux_expression','MiniSintax.py',205),
+  ('simple_expr -> term','simple_expr',1,'p_simple_expr','MiniSintax.py',216),
+  ('simple_expr -> simple_expr ADDOP term','simple_expr',3,'p_simple_expr','MiniSintax.py',217),
+  ('simple_expr -> par_simple_expr QUESTION_MARK simple_expr COLON simple_expr','simple_expr',5,'p_simple_expr','MiniSintax.py',218),
+  ('par_simple_expr -> LPAREN expression RPAREN','par_simple_expr',3,'p_par_simple_expr','MiniSintax.py',237),
+  ('mulop -> MULOP','mulop',1,'p_mulop','MiniSintax.py',244),
+  ('mulop -> AND','mulop',1,'p_mulop','MiniSintax.py',245),
+  ('mulop -> MOD','mulop',1,'p_mulop','MiniSintax.py',246),
+  ('ADDOP -> MINUS','ADDOP',1,'p_ADDOP','MiniSintax.py',254),
+  ('ADDOP -> ADD','ADDOP',1,'p_ADDOP','MiniSintax.py',255),
+  ('ADDOP -> OR','ADDOP',1,'p_ADDOP','MiniSintax.py',256),
+  ('term -> factor_a','term',1,'p_term','MiniSintax.py',264),
+  ('term -> term mulop factor_a','term',3,'p_term','MiniSintax.py',265),
+  ('factor_a -> factor','factor_a',1,'p_factor_a','MiniSintax.py',277),
+  ('factor_a -> NOT factor','factor_a',2,'p_factor_a','MiniSintax.py',278),
+  ('factor_a -> MINUS factor','factor_a',2,'p_factor_a','MiniSintax.py',279),
+  ('factor -> IDENTIFIER','factor',1,'p_factor','MiniSintax.py',290),
+  ('factor -> LPAREN expression RPAREN','factor',3,'p_factor','MiniSintax.py',291),
+  ('factor -> CONSTANT','factor',1,'p_factor','MiniSintax.py',292),
+  ('empty -> <empty>','empty',0,'p_empty','MiniSintax.py',321),
 ]

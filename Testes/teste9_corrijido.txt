@@ -1,0 +1,20 @@
+program teste9
+
+declare
+
+integer x, y;
+
+begin
+
+read(x);
+read(y);
+
+if (x > y) then
+    write("x é maior que y");
+else if (x < y) then
+    write("y é maior que x");
+else
+    write("x e y são iguais");
+end;
+end;
+end

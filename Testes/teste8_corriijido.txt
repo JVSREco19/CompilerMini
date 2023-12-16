@@ -1,0 +1,20 @@
+program teste8
+
+declare
+
+integer n, fatorial, i;
+
+begin
+
+read(n);
+fatorial := 1;
+
+for i := 1 to n do
+    fatorial := fatorial * i;
+
+write("O fatorial de ");
+write(n);
+write(" é ");
+write(fatorial);
+end;
+end
