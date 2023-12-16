@@ -73,6 +73,7 @@ def t_IDENTIFIER(t):
 def t_COMMENT(t):
     r'%.*'
     pass
+
 # Expressão regular para rastrear números de linha
 def t_newline(t):
     r'\n+'
@@ -127,4 +128,5 @@ if __name__ == '__main__':
             tokList = runLexer(arquivo_txt)
             for i in tokList:
                 print (i)
-            
+        
+        break

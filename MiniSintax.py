@@ -73,7 +73,9 @@ def p_type(p):
 
 def p_ident_list(p):
   '''ident_list : IDENTIFIER COMMA ident_list
-                  '''
+  '''
+  
+  
   if(len(p)==4):
     p[0] = p[1] + p[2] + p[3]
   global current_rule
@@ -82,6 +84,7 @@ def p_ident_list(p):
   
 def p_ident_list_single(p):
   '''ident_list : IDENTIFIER'''
+  
   p[0] = p[1]
   global current_rule
   current_rule = "ident_list_single"
@@ -114,7 +117,13 @@ def p_stmt(p):
   
 def p_assign_stmt(p):
   '''assign_stmt : IDENTIFIER ASSIGN simple_expr'''
-  symbolTable.get()[p[1]]['attribute']['Valor'] = p[3]
+
+  if(symbolTable.contains(p[1])):
+    p[0] = 1
+  else:
+    p[0] = 0
+    print("Erro semantico")
+
   global current_rule
   current_rule = "assign_stmt"
 
@@ -153,9 +162,14 @@ def p_condition(p):
   current_rule = "condition"
   
 def p_read_stmt(p):
- '''read_stmt : READ LPAREN IDENTIFIER RPAREN'''
- global current_rule
- current_rule = "read_stmt"
+  '''read_stmt : READ LPAREN IDENTIFIER RPAREN'''
+  if(symbolTable.contains(p[3])):
+    p[0] = 1
+  else:
+    print("Erro semantico")
+
+  global current_rule
+  current_rule = "read_stmt"
  
 def p_write_stmt(p):
   '''write_stmt : WRITE LPAREN writable RPAREN'''
@@ -171,8 +185,19 @@ def p_writable(p):
   current_rule = "writable"
   
 def p_expression(p):
-  '''expression : simple_expr
-                | expression RELOP expression
+  '''expression : simple_expr aux_expression
+                
+  '''
+  global current_rule
+  current_rule = "expression"
+  # if(len(p)==2):
+  #   p[0] = p[1]  
+  # else:
+  #   p[0] = opHash[p[2]](p[1],p[3])
+  
+def p_aux_expression(p):
+  '''aux_expression : RELOP simple_expr
+                  | empty
                 
   '''
   global current_rule
@@ -184,10 +209,8 @@ def p_expression(p):
     
 def p_simple_expr(p):
   '''simple_expr : term
-                  | simple_expr ADDOP simple_expr
-                  | simple_expr mulop simple_expr
-                  | LPAREN simple_expr RPAREN
-                  | simple_expr QUESTION_MARK simple_expr COLON simple_expr
+                  | simple_expr ADDOP term
+                  | par_simple_expr QUESTION_MARK simple_expr COLON simple_expr
   '''
   global current_rule
   current_rule = "simple_expr "
@@ -204,6 +227,13 @@ def p_simple_expr(p):
   #     p[0] = p[3]
   #   else:
   #     p[0] = p[5]
+  
+def p_par_simple_expr(p):
+  '''par_simple_expr : LPAREN expression RPAREN
+
+  '''
+  global current_rule
+  current_rule = "par_simple_expr "
 
 def p_mulop(p):
   '''mulop : MULOP
@@ -243,43 +273,49 @@ def p_factor_a(p):
               | NOT factor
               | MINUS factor
   '''
-  if(len(p)==2):
-    p[0] = p[1]
-  else:
-    p[0] = not p[1]
+  # if(len(p)==2):
+  #   p[0] = p[1]
+  # else:
+  #   p[0] = not p[1]
+    
   global current_rule
   current_rule = "factor_a"
   
 def p_factor(p):
   '''factor : IDENTIFIER
             | LPAREN expression RPAREN
+            | CONSTANT
+ 
   '''
   if(len(p)==2):
-    if(symbolTable.contains(p[1])):
-      p[0] = symbolTable.get()[p[1]]['attribute']['Valor']
-    else:
-      print("Erro semantico")
+    if(p.slice[1].type == "IDENTIFIER"):
+      if(symbolTable.contains(p[1])):
+        p[0] = symbolTable.get()[p[1]]['attribute']['Valor']
+      else:
+        print("Erro semantico")
   else:
     p[0] = p[2]
+    
   global current_rule
   current_rule = "factor"
     
-def p_factor(p):
-  '''factor : CONSTANT
-  '''
-  p[0] = p[1]
-  global current_rule
-  current_rule = "factor"
-  
+
+
 def p_error(p):
+    global current_rule
     if p:
         print(f"Syntax error at token {p.type} on line {p.lineno} and value {p.value} and rule :{current_rule}")
 
     else:
         print("Syntax error at EOF")
-    global current_rule
+    
     current_rule = "error"
 
+
+def p_empty(p):
+  'empty :'
+  
+  pass
 
 # Exemplo de uso do analisador sintático
 if __name__ == '__main__':
@@ -297,4 +333,5 @@ if __name__ == '__main__':
       print('\n'+"Tabela de simbolos: "+'\n')
       for key,value in symbolTable.table.items():
         print(key + ": "+ str(value))
+    
     symbolTable.clear()
